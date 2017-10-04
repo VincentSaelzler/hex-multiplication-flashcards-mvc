@@ -12,10 +12,14 @@ namespace HexMultiplicationFlashCardsMvc
     {
         protected void Application_Start()
         {
+            //existed in .NET MVC template
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //added later
+            AutoMapperConfig.Initialize();
         }
     }
 }
