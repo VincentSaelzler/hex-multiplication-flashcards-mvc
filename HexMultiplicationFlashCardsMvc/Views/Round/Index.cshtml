@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HexMultiplicationFlashCardsMvc.DAL.Quiz>
+﻿@model IEnumerable<HexMultiplicationFlashCardsMvc.DAL.Round>
 
 @{
     ViewBag.Title = "Index";
@@ -12,13 +12,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Started)
+            @Html.DisplayNameFor(model => model.Num)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Finished)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Student.Name)
+            @Html.DisplayNameFor(model => model.Quiz.Id)
         </th>
         <th></th>
     </tr>
@@ -26,13 +23,10 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Started)
+            @Html.DisplayFor(modelItem => item.Num)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Finished)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Student.Name)
+            @Html.DisplayFor(modelItem => item.Quiz.Id)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

@@ -11,112 +11,107 @@ using HexMultiplicationFlashCardsMvc.DAL;
 
 namespace HexMultiplicationFlashCardsMvc.Controllers
 {
-    public class QuizController : Controller
+    public class StudentController : Controller
     {
         private FlashCardEntities db = new FlashCardEntities();
 
-        // GET: Quiz
+        // GET: Student
         public async Task<ActionResult> Index()
         {
-            var quiz = db.Quiz.Include(q => q.Student);
-            return View(await quiz.ToListAsync());
+            return View(await db.Student.ToListAsync());
         }
 
-        // GET: Quiz/Details/5
+        // GET: Student/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Quiz quiz = await db.Quiz.FindAsync(id);
-            if (quiz == null)
+            Student student = await db.Student.FindAsync(id);
+            if (student == null)
             {
                 return HttpNotFound();
             }
-            return View(quiz);
+            return View(student);
         }
 
-        // GET: Quiz/Create
+        // GET: Student/Create
         public ActionResult Create()
         {
-            ViewBag.PersonId = new SelectList(db.Student, "Id", "Name");
             return View();
         }
 
-        // POST: Quiz/Create
+        // POST: Student/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Started,Finished,PersonId")] Quiz quiz)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name")] Student student)
         {
             if (ModelState.IsValid)
             {
-                db.Quiz.Add(quiz);
+                db.Student.Add(student);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.PersonId = new SelectList(db.Student, "Id", "Name", quiz.PersonId);
-            return View(quiz);
+            return View(student);
         }
 
-        // GET: Quiz/Edit/5
+        // GET: Student/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Quiz quiz = await db.Quiz.FindAsync(id);
-            if (quiz == null)
+            Student student = await db.Student.FindAsync(id);
+            if (student == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.PersonId = new SelectList(db.Student, "Id", "Name", quiz.PersonId);
-            return View(quiz);
+            return View(student);
         }
 
-        // POST: Quiz/Edit/5
+        // POST: Student/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Started,Finished,PersonId")] Quiz quiz)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name")] Student student)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(quiz).State = EntityState.Modified;
+                db.Entry(student).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.PersonId = new SelectList(db.Student, "Id", "Name", quiz.PersonId);
-            return View(quiz);
+            return View(student);
         }
 
-        // GET: Quiz/Delete/5
+        // GET: Student/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Quiz quiz = await db.Quiz.FindAsync(id);
-            if (quiz == null)
+            Student student = await db.Student.FindAsync(id);
+            if (student == null)
             {
                 return HttpNotFound();
             }
-            return View(quiz);
+            return View(student);
         }
 
-        // POST: Quiz/Delete/5
+        // POST: Student/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Quiz quiz = await db.Quiz.FindAsync(id);
-            db.Quiz.Remove(quiz);
+            Student student = await db.Student.FindAsync(id);
+            db.Student.Remove(student);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
