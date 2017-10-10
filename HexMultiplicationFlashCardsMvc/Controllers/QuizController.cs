@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using HexMultiplicationFlashCardsMvc.DAL;
+using HexMultiplicationFlashCardsMvc.ViewModels;
 
 namespace HexMultiplicationFlashCardsMvc.Controllers
 {
@@ -41,7 +42,8 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
         public ActionResult Create()
         {
             ViewBag.PersonId = new SelectList(db.Student, "Id", "Name");
-            return View();
+            QuizVm quizVm = new QuizVm(); //get default date value
+            return View(quizVm);
         }
 
         // POST: Quiz/Create
@@ -49,17 +51,26 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Started,Finished,PersonId")] Quiz quiz)
+        //TODO: personID should be based on logged in user, never passed in as a parameter
+        public async Task<ActionResult> Create([Bind(Include = "Id,Description,Started,Finished,PersonId,MinMultiplier,MaxMultiplier,MinMultiplicand,MaxMultiplicand")] QuizVm quizVm)
         {
             if (ModelState.IsValid)
             {
+                //add questions
+
+                //add round
+
+                //add quiz
+                Quiz quiz = AutoMapper.Mapper.Map<QuizVm, Quiz>(quizVm);
                 db.Quiz.Add(quiz);
                 await db.SaveChangesAsync();
+
+                //redirect to quiz (round)
                 return RedirectToAction("Index");
             }
 
-            ViewBag.PersonId = new SelectList(db.Student, "Id", "Name", quiz.PersonId);
-            return View(quiz);
+            ViewBag.PersonId = new SelectList(db.Student, "Id", "Name", quizVm.PersonId);
+            return View(quizVm);
         }
 
         // GET: Quiz/Edit/5
@@ -83,7 +94,7 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Started,Finished,PersonId")] Quiz quiz)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Description,Started,Finished,PersonId")] Quiz quiz)
         {
             if (ModelState.IsValid)
             {

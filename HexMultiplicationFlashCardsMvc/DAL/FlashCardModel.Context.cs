@@ -29,5 +29,7 @@ namespace HexMultiplicationFlashCardsMvc.DAL
         public virtual DbSet<Quiz> Quiz { get; set; }
         public virtual DbSet<Round> Round { get; set; }
         public virtual DbSet<Student> Student { get; set; }
+
+        public System.Data.Entity.DbSet<HexMultiplicationFlashCardsMvc.ViewModels.QuizVm> QuizVms { get; set; }
     }
 }

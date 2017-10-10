@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using HexMultiplicationFlashCardsMvc.DAL;
+using HexMultiplicationFlashCardsMvc.ViewModels;
 
 namespace HexMultiplicationFlashCardsMvc
 {
@@ -8,7 +10,8 @@ namespace HexMultiplicationFlashCardsMvc
         {
             Mapper.Initialize(cfg =>
             {
-                //nothing to map yet.
+                cfg.CreateMap<QuizVm, Quiz>();
+                // .ForMember(dest => dest., opts => opts.Ignore);//nothing to map yet.
             });
             Mapper.Configuration.AssertConfigurationIsValid();
         }
