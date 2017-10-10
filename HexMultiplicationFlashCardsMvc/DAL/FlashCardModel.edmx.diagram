@@ -5,13 +5,13 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="feaa00702cf64be9a1f207e5c7fb1c37" Name="Diagram1">
-        <EntityTypeShape EntityType="FlashCardModel.Question" Width="1.5" PointX="7.5" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="FlashCardModel.Quiz" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="FlashCardModel.Round" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="FlashCardModel.Student" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
-        <AssociationConnector Association="FlashCardModel.FK_Question_Round" ManuallyRouted="false" />
-        <AssociationConnector Association="FlashCardModel.FK_Quiz_Person" ManuallyRouted="false" />
-        <AssociationConnector Association="FlashCardModel.FK_Round_Quiz" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="FlashCardModel.Question" Width="1.5" PointX="7.5" PointY="1" />
+        <EntityTypeShape EntityType="FlashCardModel.Quiz" Width="1.5" PointX="3" PointY="1" />
+        <EntityTypeShape EntityType="FlashCardModel.Round" Width="1.5" PointX="5.25" PointY="1.125" />
+        <EntityTypeShape EntityType="FlashCardModel.Student" Width="1.5" PointX="0.75" PointY="1.375" />
+        <AssociationConnector Association="FlashCardModel.FK_Question_Round" />
+        <AssociationConnector Association="FlashCardModel.FK_Quiz_Person" />
+        <AssociationConnector Association="FlashCardModel.FK_Round_Quiz" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

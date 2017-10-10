@@ -21,9 +21,10 @@ namespace HexMultiplicationFlashCardsMvc.DAL
         }
     
         public int Id { get; set; }
+        public string Description { get; set; }
         public System.DateTime Started { get; set; }
         public Nullable<System.DateTime> Finished { get; set; }
-        public int PersonId { get; set; }
+        public Nullable<int> PersonId { get; set; }
     
         public virtual Student Student { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
