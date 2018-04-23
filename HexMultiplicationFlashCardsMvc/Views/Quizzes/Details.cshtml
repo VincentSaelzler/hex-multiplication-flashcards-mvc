@@ -1,0 +1,74 @@
+﻿@model HexMultiplicationFlashCardsMvc.ViewModels.Quiz
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Quiz</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Started)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Started)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Finished)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Finished)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MinMultiplier)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MinMultiplier)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MinMultiplicand)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MinMultiplicand)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxMultiplier)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaxMultiplier)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxMultiplicand)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaxMultiplicand)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
