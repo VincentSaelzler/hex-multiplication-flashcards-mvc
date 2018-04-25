@@ -328,6 +328,8 @@
     <Content Include="Views\Create.cshtml" />
     <Content Include="Views\Quizzes\Details.cshtml" />
     <Content Include="Views\Quizzes\Create.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Round.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\FlashCard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

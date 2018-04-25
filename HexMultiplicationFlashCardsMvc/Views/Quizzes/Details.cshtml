@@ -66,6 +66,20 @@
             @Html.DisplayFor(model => model.MaxMultiplicand)
         </dd>
 
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rounds)
+        </dt>
+
+        <dd>
+            @if (Model.Rounds != null)
+            {   
+                foreach (var r in Model.Rounds)
+                {
+                    @Html.DisplayFor(x => r)
+                }
+            }
+        </dd>
     </dl>
 </div>
 <p>

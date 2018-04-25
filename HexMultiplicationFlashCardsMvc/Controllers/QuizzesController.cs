@@ -17,26 +17,72 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
     {
         private DAL.FlashCardEntities db = new DAL.FlashCardEntities();
 
-        //// GET: Quizzes
-        //public async Task<ActionResult> Index()
-        //{
-        //    return View(await db.Quizs.ToListAsync());
-        //}
+        // GET: Quizzes
+        public async Task<ActionResult> Index()
+        {
+            var q1 = new DAL.Question { Id = 1, Multiplicand = 1, Multiplier = 2 };
+            var q2 = new DAL.Question { Id = 2, Multiplicand = 2, Multiplier = 2 };
+            var q3 = new DAL.Question { Id = 3, Multiplicand = 3, Multiplier = 2 };
 
-        //// GET: Quizzes/Details/5
-        //public async Task<ActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Quiz quiz = await db.Quizs.FindAsync(id);
-        //    if (quiz == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(quiz);
-        //}
+            //var fc1 = Mapper.Map<DAL.Question, ViewModels.FlashCard>(q1);
+            //var fc2 = Mapper.Map<DAL.Question, ViewModels.FlashCard>(q2);
+            //var fc3 = Mapper.Map<DAL.Question, ViewModels.FlashCard>(q3);
+            //ICollection<ViewModels.FlashCard> fcs = new ViewModels.FlashCard[] { fc1, fc2, fc3 };
+
+            ICollection<DAL.Question> qs1 = new DAL.Question[] { q1, q2 };
+            ICollection<DAL.Question> qs2 = new DAL.Question[] { q3 };
+
+            var rDb1 = new DAL.Round { Id = 1, Num = 1, Question = qs1 };
+            var rDb2 = new DAL.Round { Id = 2, Num = 2, Question = qs2 };
+
+            foreach (var q in rDb1.Question)
+            {
+                q.Round = rDb1;
+                q.RoundId = rDb1.Id;
+            }
+
+
+            foreach (var q in rDb2.Question)
+            {
+                q.Round = rDb2;
+                q.RoundId = rDb2.Id;
+            }
+
+            //var rVm1 = Mapper.Map<DAL.Round, ViewModels.Round>(rDb1);
+            //var rVm2 = Mapper.Map<DAL.Round, ViewModels.Round>(rDb2);
+
+            ICollection<DAL.Round> rs1 = new DAL.Round[] { rDb1, rDb2 };
+
+            var qzDb = new DAL.Quiz() { Id = 1, Description = "Outer", Round = rs1 };
+
+            foreach (var r in qzDb.Round)
+            {
+                r.Quiz = qzDb;
+                r.QuizId = qzDb.Id;
+            }
+
+            var qzVm = Mapper.Map<DAL.Quiz, ViewModels.Quiz>(qzDb);
+
+            //return View(await db.Quizs.ToListAsync());
+            return View();
+        }
+
+        // GET: Quizzes/Details/5
+        public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            DAL.Quiz quizDb = await db.Quiz.FindAsync(id);
+            if (quizDb == null)
+            {
+                return HttpNotFound();
+            }
+
+            var quizVm = Mapper.Map<DAL.Quiz, ViewModels.Quiz>(quizDb);
+            return View(quizVm);
+        }
 
         // GET: Quizzes/Create
         public ActionResult Create()
@@ -74,11 +120,13 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
                         questionsVm.Add(questionVm);
                     }
                 }
-                
+
 
                 //add round
-                var roundVm = new ViewModels.Round();
-                roundVm.Questions = questionsVm;
+                var roundVm = new ViewModels.Round
+                {
+                    Questions = questionsVm
+                };
                 quizVm.Rounds = new ViewModels.Round[] { roundVm };
                 //add quiz                
                 var quizDb = Mapper.Map<ViewModels.Quiz, DAL.Quiz>(quizVm);

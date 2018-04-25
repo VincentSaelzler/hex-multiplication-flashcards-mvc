@@ -1,0 +1,42 @@
+﻿@model HexMultiplicationFlashCardsMvc.ViewModels.Round
+
+<div>
+    <h4>Round</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Num)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Num)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QuizId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QuizId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Questions)
+        </dt>
+
+        <dd>
+            @if (Model.Questions != null)
+            {
+                foreach (var q in Model.Questions)
+                {
+                    @Html.DisplayFor(x => q)
+                }
+            }
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
