@@ -10,6 +10,8 @@ using System.Web.Mvc;
 using AutoMapper;
 //using HexMultiplicationFlashCardsMvc.DAL;
 //using HexMultiplicationFlashCardsMvc.ViewModels;
+//TODO: explore the automapper methods that project source objects to target objects without pulling
+//un-necessary fields.
 
 namespace HexMultiplicationFlashCardsMvc.Controllers
 {
@@ -20,54 +22,12 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
         // GET: Quizzes
         public async Task<ActionResult> Index()
         {
-            var q1 = new DAL.Question { Id = 1, Multiplicand = 1, Multiplier = 2 };
-            var q2 = new DAL.Question { Id = 2, Multiplicand = 2, Multiplier = 2 };
-            var q3 = new DAL.Question { Id = 3, Multiplicand = 3, Multiplier = 2 };
-
-            //var fc1 = Mapper.Map<DAL.Question, ViewModels.FlashCard>(q1);
-            //var fc2 = Mapper.Map<DAL.Question, ViewModels.FlashCard>(q2);
-            //var fc3 = Mapper.Map<DAL.Question, ViewModels.FlashCard>(q3);
-            //ICollection<ViewModels.FlashCard> fcs = new ViewModels.FlashCard[] { fc1, fc2, fc3 };
-
-            ICollection<DAL.Question> qs1 = new DAL.Question[] { q1, q2 };
-            ICollection<DAL.Question> qs2 = new DAL.Question[] { q3 };
-
-            var rDb1 = new DAL.Round { Id = 1, Num = 1, Question = qs1 };
-            var rDb2 = new DAL.Round { Id = 2, Num = 2, Question = qs2 };
-
-            foreach (var q in rDb1.Question)
-            {
-                q.Round = rDb1;
-                q.RoundId = rDb1.Id;
-            }
-
-
-            foreach (var q in rDb2.Question)
-            {
-                q.Round = rDb2;
-                q.RoundId = rDb2.Id;
-            }
-
-            //var rVm1 = Mapper.Map<DAL.Round, ViewModels.Round>(rDb1);
-            //var rVm2 = Mapper.Map<DAL.Round, ViewModels.Round>(rDb2);
-
-            ICollection<DAL.Round> rs1 = new DAL.Round[] { rDb1, rDb2 };
-
-            var qzDb = new DAL.Quiz() { Id = 1, Description = "Outer", Round = rs1 };
-
-            foreach (var r in qzDb.Round)
-            {
-                r.Quiz = qzDb;
-                r.QuizId = qzDb.Id;
-            }
-
-            var qzVm = Mapper.Map<DAL.Quiz, ViewModels.Quiz>(qzDb);
-
-            //return View(await db.Quizs.ToListAsync());
-            return View();
+            var dbQuizzes = await db.Quiz.ToListAsync();
+            var vmQuizzes = dbQuizzes.Select(q => Mapper.Map<DAL.Quiz, ViewModels.Quiz>(q));
+            return View(vmQuizzes);
         }
 
-        // GET: Quizzes/Details/5
+        // GET: Quizzes/Details/5 
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -95,107 +55,194 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(ViewModels.Quiz quizVm)
+        public async Task<ActionResult> Create(ViewModels.Quiz vmQuiz)
         //TODO: implement over posting attack //public async Task<ActionResult> Create([Bind(Include = "Id,Description,Started,Finished")] ViewModels.Quiz quiz)
         {
 
             //TODO: handle pasing errors
-            int MinMultiplier = int.Parse(quizVm.MinMultiplier, System.Globalization.NumberStyles.HexNumber);
-            int MinMultiplicand = int.Parse(quizVm.MinMultiplicand, System.Globalization.NumberStyles.HexNumber);
-            int MaxMultiplier = int.Parse(quizVm.MaxMultiplier, System.Globalization.NumberStyles.HexNumber);
-            int MaxMultiplicand = int.Parse(quizVm.MaxMultiplicand, System.Globalization.NumberStyles.HexNumber);
+            int MinMultiplier = int.Parse(vmQuiz.MinMultiplier, System.Globalization.NumberStyles.HexNumber);
+            int MinMultiplicand = int.Parse(vmQuiz.MinMultiplicand, System.Globalization.NumberStyles.HexNumber);
+            int MaxMultiplier = int.Parse(vmQuiz.MaxMultiplier, System.Globalization.NumberStyles.HexNumber);
+            int MaxMultiplicand = int.Parse(vmQuiz.MaxMultiplicand, System.Globalization.NumberStyles.HexNumber);
 
             if (ModelState.IsValid)
             {
-                //TESTING
-                quizVm.Started = DateTime.Now;
+                //https://stackoverflow.com/questions/7311949/ramifications-of-dbset-create-versus-new-entity
+                //TODO: experiment then add to lessons learned; will db.Quiz.Create() avoid having nulls in
+                //Quiz.Round unlike new Quiz()?
+                var dbQuiz = db.Quiz.Create();
+                var dbRound = db.Round.Create();
 
-                //add questions
-                var questionsVm = new List<ViewModels.FlashCard>();
+                dbQuiz.Description = vmQuiz.Description;
+                dbQuiz.Started = DateTime.Now;
+                dbQuiz.Round.Add(dbRound);
+
+                //create questions
                 for (int multiplier = MinMultiplier; multiplier <= MaxMultiplier; multiplier++)
                 {
                     for (int multiplicand = MinMultiplicand; multiplicand <= MaxMultiplicand; multiplicand++)
                     {
-                        var questionVm = new ViewModels.FlashCard(multiplier, multiplicand);
-                        questionsVm.Add(questionVm);
+                        var vmQuestion = new ViewModels.FlashCard(multiplier, multiplicand);
+
+                        dbRound.Question.Add(
+                            new DAL.Question()
+                            {
+                                Multiplicand = vmQuestion.Multiplicand,
+                                Multiplier = vmQuestion.Multiplier,
+                                Product = vmQuestion.Product
+                            });
                     }
                 }
 
-
-                //add round
-                var roundVm = new ViewModels.Round
-                {
-                    Questions = questionsVm
-                };
-                quizVm.Rounds = new ViewModels.Round[] { roundVm };
-                //add quiz                
-                var quizDb = Mapper.Map<ViewModels.Quiz, DAL.Quiz>(quizVm);
-                db.Quiz.Add(quizDb);
+                db.Quiz.Add(dbQuiz);
                 await db.SaveChangesAsync();
-                //return RedirectToAction("Index");
+                return RedirectToAction("Index");
             }
 
 
 
+            return View(vmQuiz);
+        }
+
+        // GET: Quizzes/Edit/5
+        public async Task<ActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            DAL.Quiz quizDb = await db.Quiz.FindAsync(id);
+            if (quizDb == null)
+            {
+                return HttpNotFound();
+            }
+            var quizVm = Mapper.Map<DAL.Quiz, ViewModels.Quiz>(quizDb);
             return View(quizVm);
         }
 
-        //// GET: Quizzes/Edit/5
-        //public async Task<ActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Quiz quiz = await db.Quizs.FindAsync(id);
-        //    if (quiz == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(quiz);
-        //}
+        //PERFECTION: make naming conventions consistent (e.g. dbRound vs roundDb
 
-        //// POST: Quizzes/Edit/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
+        // POST: Quizzes/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         //public async Task<ActionResult> Edit([Bind(Include = "Id,Description,Started,Finished")] Quiz quiz)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(quiz).State = EntityState.Modified;
-        //        await db.SaveChangesAsync();
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(quiz);
-        //}
+        public async Task<ActionResult> Edit(ViewModels.Quiz vmQuiz)
+        {
+            if (ModelState.IsValid)
+            {
+                var dbQuiz = await db.Quiz.FindAsync(vmQuiz.Id);
+                dbQuiz.Description = vmQuiz.Description;
+                db.Entry(dbQuiz).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
 
-        //// GET: Quizzes/Delete/5
-        //public async Task<ActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Quiz quiz = await db.Quizs.FindAsync(id);
-        //    if (quiz == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(quiz);
-        //}
+            return View(vmQuiz);
+        }
 
-        //// POST: Quizzes/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> DeleteConfirmed(int id)
-        //{
-        //    Quiz quiz = await db.Quizs.FindAsync(id);
-        //    db.Quizs.Remove(quiz);
-        //    await db.SaveChangesAsync();
-        //    return RedirectToAction("Index");
-        //}
+        // GET: Quizzes/Delete/5
+        public async Task<ActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var dbQuiz = await db.Quiz.FindAsync(id);
+            if (dbQuiz == null)
+            {
+                return HttpNotFound();
+            }
+            return View(Mapper.Map<DAL.Quiz, ViewModels.Quiz>(dbQuiz));
+        }
+
+        // POST: Quizzes/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteConfirmed(int id)
+        {
+            var dbQuiz = await db.Quiz.FindAsync(id);
+            db.Quiz.Remove(dbQuiz);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        //TODO: document lessons learned about copying by reference vs by value
+        //specifically when copying old questions from last round to new round
+        public async Task<ActionResult> Take(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            DAL.Quiz quizDb = await db.Quiz.FindAsync(id);
+            if (quizDb == null)
+            {
+                return HttpNotFound();
+            }
+            int? questionId = await GetNextQuestionId(quizDb);
+            if (questionId == null)
+            {
+                return RedirectToAction("Details", new { id });
+            }
+            return RedirectToAction("Edit", "Questions", new { id = questionId });
+        }
+
+        private async Task<int?> GetNextQuestionId(DAL.Quiz quiz)
+        {
+            //PERFECTION: eager load all entities?
+            //PERFECTION: display multiplicand before multiplier?
+
+            //this quiz is already complete
+            if (quiz.Round.Any(r => r.Question.All(qst => qst.Response == qst.Product)))
+            {
+                quiz.Finished = DateTime.Now;
+                await db.SaveChangesAsync();
+                return null;
+            }
+            //a round is currently in progress
+            else if (quiz.Round.Any(r => r.Question.Any(qst => qst.Response == null)))
+            {
+                var round = quiz.Round.Single(r => r.Question.Any(qst => qst.Response == null));
+                var questions = round.Question.Where(qst => qst.Response == null);
+                //TODO: randomize
+                int questionId = questions.First().Id;
+                return questionId;
+            }
+            //make a new round
+            else
+            {
+                //get old info
+                var oldRound = quiz.Round.OrderByDescending(r => r.Num).First();
+                var oldQuestions = oldRound.Question.Where(qst => qst.Response != qst.Product);
+
+                //create new questions and round
+                var questions = oldQuestions
+                    .Select(oq => new DAL.Question()
+                    {
+                        Product = oq.Product,
+                        Multiplicand = oq.Multiplicand,
+                        Multiplier = oq.Multiplier
+                    });
+
+                var round = new DAL.Round()
+                {
+                    Num = oldRound.Num + 1,
+                    Quiz = quiz,
+                    Question = questions.ToList() //cannot convert directly from IEnumerable to ICollection
+                };
+
+                //save to DB
+                db.Round.Add(round);
+                await db.SaveChangesAsync();
+
+                //pull from DB
+                //TODO: randomize
+                int questionId = round.Question.First().Id;
+                return questionId;
+            }
+        }
 
         protected override void Dispose(bool disposing)
         {

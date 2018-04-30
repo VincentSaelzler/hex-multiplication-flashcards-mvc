@@ -1,0 +1,102 @@
+﻿@model HexMultiplicationFlashCardsMvc.ViewModels.Quiz
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Description)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Description)
+    </dd>
+
+    @*<dt>
+        @Html.DisplayNameFor(model => model.Started)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Started)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Finished)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Finished)
+    </dd>*@
+
+    <dt>
+        @Html.DisplayNameFor(model => model.MinMultiplier)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.MinMultiplier)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.MinMultiplicand)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.MinMultiplicand)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.MaxMultiplier)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.MaxMultiplier)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.MaxMultiplicand)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.MaxMultiplicand)
+    </dd>
+
+</dl>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>Quiz</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

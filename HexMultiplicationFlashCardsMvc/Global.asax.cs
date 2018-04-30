@@ -20,6 +20,7 @@ namespace HexMultiplicationFlashCardsMvc
 
             //added later
             AutoMapperConfig.Initialize();
+            ModelBinders.Binders.Add(typeof(ViewModels.FlashCard), new ViewModels.FlashCardModelBinder());
         }
     }
 }

@@ -7,6 +7,7 @@ namespace HexMultiplicationFlashCardsMvc.ViewModels
     {
         public int Id { get; set; }
         public string Description { get; set; }
+        //TODO: stop displaying the "Started" field in edit template - just use datetime.now and same for finished
         public DateTime Started { get; set; }
         public DateTime? Finished { get; set; }
         public string MinMultiplier { get; set; }

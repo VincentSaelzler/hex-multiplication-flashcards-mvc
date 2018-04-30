@@ -23,18 +23,20 @@ namespace HexMultiplicationFlashCardsMvc
            //for round were auto-detected, but the circular referece for question was not. Maybe due to inconsistent naming
            //with Question/Flashcard being used interchangibly?
 
+            //TODO: don't use automapper to create DAL objects, and document why.
+
             Mapper.Initialize(cfg =>
             {
-                //view models to DB
-                cfg.CreateMap<ViewModels.Quiz, DAL.Quiz>()
-                    .ForMember(db => db.PersonId, opt => opt.Ignore())
-                    .ForMember(db => db.Student, opt => opt.Ignore())
-                    .ForMember(db => db.Round, opt => opt.MapFrom(vm => vm.Rounds));
+                ////view models to DB
+                //cfg.CreateMap<ViewModels.Quiz, DAL.Quiz>()
+                //    .ForMember(db => db.PersonId, opt => opt.Ignore())
+                //    .ForMember(db => db.Student, opt => opt.Ignore())
+                //    .ForMember(db => db.Round, opt => opt.MapFrom(vm => vm.Rounds));
 
-                cfg.CreateMap<ViewModels.Round, DAL.Round>()
-                    .ForMember(db => db.Question, opt => opt.MapFrom(vm => vm.Questions));
+                //cfg.CreateMap<ViewModels.Round, DAL.Round>()
+                //    .ForMember(db => db.Question, opt => opt.MapFrom(vm => vm.Questions));
 
-                cfg.CreateMap<ViewModels.FlashCard, DAL.Question>();
+                //cfg.CreateMap<ViewModels.FlashCard, DAL.Question>();
 
                 //DB to view models
                 cfg.CreateMap<DAL.Quiz, ViewModels.Quiz>()

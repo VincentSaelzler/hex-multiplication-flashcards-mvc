@@ -206,8 +206,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Controllers\QuizzesController.cs" />
-    <Compile Include="Controllers\RoundsController.cs" />
+    <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="DAL\FlashCardModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -326,20 +327,28 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Create.cshtml" />
-    <Content Include="Views\Quizzes\Details.cshtml" />
     <Content Include="Views\Quizzes\Create.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Round.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\FlashCard.cshtml" />
+    <Content Include="Views\Questions\Details.cshtml" />
+    <Content Include="Views\Questions\Edit.cshtml" />
+    <Content Include="Views\Quizzes\Index.cshtml" />
+    <Content Include="Views\Quizzes\Details.cshtml" />
+    <Content Include="Views\Quizzes\Edit.cshtml" />
+    <Content Include="Views\Quizzes\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Rounds\" />
+    <Folder Include="Views\Students\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
