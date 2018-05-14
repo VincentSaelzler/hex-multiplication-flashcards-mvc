@@ -40,7 +40,7 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
                 return HttpNotFound();
             }
 
-            var quizVm = Mapper.Map<DAL.Quiz, ViewModels.Quiz>(quizDb);
+            var quizVm = Mapper.Map<DAL.Quiz, ViewModels.QuizDetails>(quizDb);
             return View(quizVm);
         }
 
@@ -58,8 +58,8 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
         public async Task<ActionResult> Create(ViewModels.Quiz vmQuiz)
         //TODO: implement over posting attack //public async Task<ActionResult> Create([Bind(Include = "Id,Description,Started,Finished")] ViewModels.Quiz quiz)
         {
-
             //TODO: handle pasing errors
+            //TODO: create quiz domain model?
             int MinMultiplier = int.Parse(vmQuiz.MinMultiplier, System.Globalization.NumberStyles.HexNumber);
             int MinMultiplicand = int.Parse(vmQuiz.MinMultiplicand, System.Globalization.NumberStyles.HexNumber);
             int MaxMultiplier = int.Parse(vmQuiz.MaxMultiplier, System.Globalization.NumberStyles.HexNumber);
@@ -68,7 +68,7 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
             if (ModelState.IsValid)
             {
                 //https://stackoverflow.com/questions/7311949/ramifications-of-dbset-create-versus-new-entity
-                //TODO: experiment then add to lessons learned; will db.Quiz.Create() avoid having nulls in
+                //PERFECTION: experiment then add to lessons learned; will db.Quiz.Create() avoid having nulls in
                 //Quiz.Round unlike new Quiz()?
                 var dbQuiz = db.Quiz.Create();
                 var dbRound = db.Round.Create();
@@ -82,14 +82,14 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
                 {
                     for (int multiplicand = MinMultiplicand; multiplicand <= MaxMultiplicand; multiplicand++)
                     {
-                        var vmQuestion = new ViewModels.FlashCard(multiplier, multiplicand);
+                        var mQuestion = new Models.Question(multiplier, multiplicand);
 
                         dbRound.Question.Add(
                             new DAL.Question()
                             {
-                                Multiplicand = vmQuestion.Multiplicand,
-                                Multiplier = vmQuestion.Multiplier,
-                                Product = vmQuestion.Product
+                                Multiplicand = mQuestion.Multiplicand,
+                                Multiplier = mQuestion.Multiplier,
+                                Product = mQuestion.Product
                             });
                     }
                 }
@@ -98,8 +98,6 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-
-
 
             return View(vmQuiz);
         }

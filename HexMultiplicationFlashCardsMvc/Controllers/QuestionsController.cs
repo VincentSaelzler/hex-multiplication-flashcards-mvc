@@ -7,13 +7,14 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Globalization;
 
 namespace HexMultiplicationFlashCardsMvc.Controllers
 {
     public class QuestionsController : Controller
     {
         private DAL.FlashCardEntities db = new DAL.FlashCardEntities();
-        
+
         // GET: Questions/Details/5
         public ActionResult Details(int id)
         {
@@ -41,7 +42,7 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(ViewModels.FlashCard flashCardVm)
+        public async Task<ActionResult> Edit(ViewModels.FlashCard vmQuestion)
         {
             if (ModelState.IsValid)
             {
@@ -53,17 +54,22 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
 
                 //TODO: check model state
 
-                var questionDb = await db.Question.FindAsync(flashCardVm.Id);
+                //var mQuestion = Mapper.Map<ViewModels.FlashCard, Models.Question>(vmQuestion);
+                var mQuestion = new Models.Question(vmQuestion);
 
-                questionDb.Response = flashCardVm.Response;
-                db.Entry(questionDb).State = EntityState.Modified;
+                var dbQuestion = await db.Question.FindAsync(vmQuestion.Id);
+
+                dbQuestion.Response = mQuestion.Response;
+
+                db.Entry(dbQuestion).State = EntityState.Modified;
+
                 await db.SaveChangesAsync();
-               
-                var quizId = questionDb.Round.Quiz.Id;
+
+                var quizId = dbQuestion.Round.Quiz.Id;
                 return RedirectToAction("Take", "Quizzes", new { id = quizId });
             }
 
-            return View(flashCardVm);
+            return View(vmQuestion);
         }
 
         protected override void Dispose(bool disposing)

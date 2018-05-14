@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Linq;
 
 namespace HexMultiplicationFlashCardsMvc
 {
@@ -40,10 +41,18 @@ namespace HexMultiplicationFlashCardsMvc
 
                 //DB to view models
                 cfg.CreateMap<DAL.Quiz, ViewModels.Quiz>()
-                    .ForMember(vm => vm.MinMultiplicand, opt => opt.Ignore())
-                    .ForMember(vm => vm.MinMultiplier, opt => opt.Ignore())
-                    .ForMember(vm => vm.MaxMultiplicand, opt => opt.Ignore())
-                    .ForMember(vm => vm.MaxMultiplier, opt => opt.Ignore())
+                    .ForMember(vm => vm.MinMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplicand)))
+                    .ForMember(vm => vm.MinMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplier)))
+                    .ForMember(vm => vm.MaxMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplicand)))
+                    .ForMember(vm => vm.MaxMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplier)))
+                    .ForMember(vm => vm.Rounds, opt => opt.MapFrom(db => db.Round));
+
+                cfg.CreateMap<DAL.Quiz, ViewModels.QuizDetails>()
+                    .ForMember(vm => vm.MinMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplicand)))
+                    .ForMember(vm => vm.MinMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplier)))
+                    .ForMember(vm => vm.MaxMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplicand)))
+                    .ForMember(vm => vm.MaxMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplier)))
+                    .ForMember(vm => vm.NumRounds, opt => opt.MapFrom(db => db.Round.Count))
                     .ForMember(vm => vm.Rounds, opt => opt.MapFrom(db => db.Round));
 
                 cfg.CreateMap<DAL.Round, ViewModels.Round>()
@@ -51,6 +60,10 @@ namespace HexMultiplicationFlashCardsMvc
 
                 cfg.CreateMap<DAL.Question, ViewModels.FlashCard>()
                     .PreserveReferences();
+
+                //cfg.CreateMap<ViewModels.FlashCard, Models.Question>()
+                //    .ConstructUsing(vm => new Models.Question( vm.Multiplicand, vm.Multiplier);
+
             });
             Mapper.Configuration.AssertConfigurationIsValid();
         }

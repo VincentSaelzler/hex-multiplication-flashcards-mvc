@@ -1,4 +1,4 @@
-﻿@model HexMultiplicationFlashCardsMvc.ViewModels.Quiz
+﻿@model HexMultiplicationFlashCardsMvc.ViewModels.QuizDetails
 
 @{
     ViewBag.Title = "Details";
@@ -64,6 +64,14 @@
 
         <dd>
             @Html.DisplayFor(model => model.MaxMultiplicand)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumRounds)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumRounds)
         </dd>
 
     </dl>
