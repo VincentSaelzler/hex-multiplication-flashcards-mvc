@@ -1,8 +1,57 @@
-﻿
+﻿@model HexMultiplicationFlashCardsMvc.ViewModels.FlashCard
+
 @{
     ViewBag.Title = "Details";
 }
 
 <h2>Details</h2>
-<p>This is the qs controller.</p>
 
+<div>
+    <h4>FlashCard</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Multiplicand)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Multiplicand)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Multiplier)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Multiplier)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Response)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Response)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RoundId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoundId)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+</p>

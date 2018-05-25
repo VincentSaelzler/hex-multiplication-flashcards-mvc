@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AutoMapper;
+using HexMultiplicationFlashCardsMvc.Extensions;
+using System;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Net;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using AutoMapper;
 //using HexMultiplicationFlashCardsMvc.DAL;
 //using HexMultiplicationFlashCardsMvc.ViewModels;
 //TODO: explore the automapper methods that project source objects to target objects without pulling
@@ -60,10 +59,10 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
         {
             //TODO: handle pasing errors
             //TODO: create quiz domain model?
-            int MinMultiplier = int.Parse(vmQuiz.MinMultiplier, System.Globalization.NumberStyles.HexNumber);
-            int MinMultiplicand = int.Parse(vmQuiz.MinMultiplicand, System.Globalization.NumberStyles.HexNumber);
-            int MaxMultiplier = int.Parse(vmQuiz.MaxMultiplier, System.Globalization.NumberStyles.HexNumber);
-            int MaxMultiplicand = int.Parse(vmQuiz.MaxMultiplicand, System.Globalization.NumberStyles.HexNumber);
+            int MinMultiplier = vmQuiz.MinMultiplier.ParseHex();
+            int MinMultiplicand = vmQuiz.MinMultiplicand.ParseHex();
+            int MaxMultiplier = vmQuiz.MaxMultiplier.ParseHex();
+            int MaxMultiplicand = vmQuiz.MaxMultiplicand.ParseHex();
 
             if (ModelState.IsValid)
             {

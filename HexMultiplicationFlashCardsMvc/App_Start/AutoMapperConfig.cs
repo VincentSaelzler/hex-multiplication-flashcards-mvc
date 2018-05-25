@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HexMultiplicationFlashCardsMvc.Extensions;
 using System.Linq;
 
 namespace HexMultiplicationFlashCardsMvc
@@ -41,24 +42,29 @@ namespace HexMultiplicationFlashCardsMvc
 
                 //DB to view models
                 cfg.CreateMap<DAL.Quiz, ViewModels.Quiz>()
-                    .ForMember(vm => vm.MinMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplicand)))
-                    .ForMember(vm => vm.MinMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplier)))
-                    .ForMember(vm => vm.MaxMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplicand)))
-                    .ForMember(vm => vm.MaxMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplier)))
+                    .ForMember(vm => vm.MinMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplicand.ToStringHex())))
+                    .ForMember(vm => vm.MinMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplier.ToStringHex())))
+                    .ForMember(vm => vm.MaxMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplicand.ToStringHex())))
+                    .ForMember(vm => vm.MaxMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplier.ToStringHex())))
                     .ForMember(vm => vm.Rounds, opt => opt.MapFrom(db => db.Round));
 
                 cfg.CreateMap<DAL.Quiz, ViewModels.QuizDetails>()
-                    .ForMember(vm => vm.MinMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplicand)))
-                    .ForMember(vm => vm.MinMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplier)))
-                    .ForMember(vm => vm.MaxMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplicand)))
-                    .ForMember(vm => vm.MaxMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplier)))
-                    .ForMember(vm => vm.NumRounds, opt => opt.MapFrom(db => db.Round.Count))
+                    .ForMember(vm => vm.MinMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplicand.ToStringHex())))
+                    .ForMember(vm => vm.MinMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Min(q => q.Multiplier.ToStringHex())))
+                    .ForMember(vm => vm.MaxMultiplicand, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplicand.ToStringHex())))
+                    .ForMember(vm => vm.MaxMultiplier, opt => opt.MapFrom(db => db.Round.OrderBy(r => r.Num).First().Question.Max(q => q.Multiplier.ToStringHex())))
+                    .ForMember(vm => vm.NumRounds, opt => opt.MapFrom(db => db.Round.Count.ToStringHex()))
                     .ForMember(vm => vm.Rounds, opt => opt.MapFrom(db => db.Round));
 
                 cfg.CreateMap<DAL.Round, ViewModels.Round>()
+                    .ForMember(vm => vm.Num, opt => opt.MapFrom(db => db.Num.ToStringHex()))
                     .ForMember(vm => vm.Questions, opt => opt.MapFrom(db => db.Question));
 
                 cfg.CreateMap<DAL.Question, ViewModels.FlashCard>()
+                    .ForMember(vm => vm.Multiplicand, opt => opt.MapFrom(db => db.Multiplicand.ToStringHex()))
+                    .ForMember(vm => vm.Multiplier, opt => opt.MapFrom(db => db.Multiplier.ToStringHex()))
+                    .ForMember(vm => vm.Product, opt => opt.MapFrom(db => db.Product.ToStringHex()))
+                    .ForMember(vm => vm.Response, opt => opt.MapFrom(db => db.Response.ToStringHex()))
                     .PreserveReferences();
 
                 //cfg.CreateMap<ViewModels.FlashCard, Models.Question>()

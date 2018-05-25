@@ -2,13 +2,14 @@
 {
     public class FlashCard
     {
-        public int Id { get; set; }
+        //hex numbers
         public string Multiplicand { get; set; }
         public string Multiplier { get; set; }
         public string Product { get; set; }
         public string Response { get; set; }
 
         //navigation
+        public int Id { get; set; }
         public int RoundId { get; set; }
         public Round Round { get; set; }
     }

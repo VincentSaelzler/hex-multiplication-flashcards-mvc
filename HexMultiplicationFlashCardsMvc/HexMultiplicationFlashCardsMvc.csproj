@@ -236,6 +236,8 @@
     <Compile Include="DAL\Student.cs">
       <DependentUpon>FlashCardModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\IntExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -332,12 +334,12 @@
     <Content Include="Views\Quizzes\Create.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Round.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\FlashCard.cshtml" />
-    <Content Include="Views\Questions\Details.cshtml" />
     <Content Include="Views\Questions\Edit.cshtml" />
     <Content Include="Views\Quizzes\Index.cshtml" />
     <Content Include="Views\Quizzes\Details.cshtml" />
     <Content Include="Views\Quizzes\Edit.cshtml" />
     <Content Include="Views\Quizzes\Delete.cshtml" />
+    <Content Include="Views\Questions\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

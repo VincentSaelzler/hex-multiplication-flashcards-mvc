@@ -16,9 +16,19 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
         private DAL.FlashCardEntities db = new DAL.FlashCardEntities();
 
         // GET: Questions/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            DAL.Question questionDb = await db.Question.FindAsync(id);
+            if (questionDb == null)
+            {
+                return HttpNotFound();
+            }
+            var questionVm = Mapper.Map<DAL.Question, ViewModels.FlashCard>(questionDb);
+            return View(questionVm);
         }
 
         // GET: Questions/Edit/5
