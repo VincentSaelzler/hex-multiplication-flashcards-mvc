@@ -194,8 +194,12 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
             //this quiz is already complete
             if (quiz.Round.Any(r => r.Question.All(qst => qst.Response == qst.Product)))
             {
-                quiz.Finished = DateTime.Now;
-                await db.SaveChangesAsync();
+                //prevent the repeatedly overwriting the finish time every time take is called
+                if (quiz.Finished == null)
+                {
+                    quiz.Finished = DateTime.Now;
+                    await db.SaveChangesAsync();
+                }
                 return null;
             }
             //a round is currently in progress

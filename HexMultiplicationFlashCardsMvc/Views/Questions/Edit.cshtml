@@ -4,6 +4,13 @@
     ViewBag.Title = "Edit";
 }
 
+<script type="text/javascript">
+    $(function () {
+        $('#Response').focus();
+    });
+</script>
+
+
 <h2>Edit</h2>
 
 
@@ -12,11 +19,11 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <p>@Model.Multiplicand X @Model.Multiplier = </p>
-        <h4>FlashCard</h4>
+        <h4>@Model.Multiplicand X @Model.Multiplier = </h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
+        @*these are required for constructor Models.Question.Question(ViewModels.FlashCard vmQuestion)*@
         @Html.HiddenFor(model => model.Multiplicand)
         @Html.HiddenFor(model => model.Multiplier)
 
@@ -24,16 +31,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Response, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Response, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Response, new { htmlAttributes = new { @class = "form-control", autofocus="autofocus" } })
                 @Html.ValidationMessageFor(model => model.Response, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RoundId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RoundId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.RoundId, "", new { @class = "text-danger" })
             </div>
         </div>
 

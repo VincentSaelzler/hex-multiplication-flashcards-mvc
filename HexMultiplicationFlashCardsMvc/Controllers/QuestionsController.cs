@@ -75,8 +75,11 @@ namespace HexMultiplicationFlashCardsMvc.Controllers
 
                 await db.SaveChangesAsync();
 
-                var quizId = dbQuestion.Round.Quiz.Id;
-                return RedirectToAction("Take", "Quizzes", new { id = quizId });
+                //var quizId = dbQuestion.Round.Quiz.Id;
+
+
+                return RedirectToAction("Details", "Questions", new { id = vmQuestion.Id });
+                //return RedirectToAction("Take", "Quizzes", new { id = quizId });
             }
 
             return View(vmQuestion);

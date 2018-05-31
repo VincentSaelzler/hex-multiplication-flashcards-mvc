@@ -77,6 +77,8 @@
     </dl>
 </div>
 <p>
+    @*TODO: clicking take just repeatedly increases the finish time - there is no checking if already done*@
+    @Html.ActionLink("Take", "Take", new { id = Model.Id }) |
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
